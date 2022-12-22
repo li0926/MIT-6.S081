@@ -195,6 +195,7 @@ UPROGS=\
 	$U/_zombie\
 	$U/_sleep\
 	$U/_pingpong\
+	$U/_primes\
 
 
 
@@ -409,3 +410,5 @@ myapi.key:
 
 
 .PHONY: handin tarball tarball-pref clean grade handin-check
+gdb:
+	riscv64-unknown-elf-gdb kernel/kernel
