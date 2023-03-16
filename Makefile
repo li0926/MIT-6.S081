@@ -91,7 +91,7 @@ LD = $(TOOLPREFIX)ld
 OBJCOPY = $(TOOLPREFIX)objcopy
 OBJDUMP = $(TOOLPREFIX)objdump
 
-CFLAGS = -Wall -Werror -O -fno-omit-frame-pointer -ggdb
+CFLAGS = -Wall -Werror -O -fno-omit-frame-pointer -ggdb -Wno-error=infinite-recursion
 
 ifdef LAB
 LABUPPER = $(shell echo $(LAB) | tr a-z A-Z)
@@ -193,7 +193,11 @@ UPROGS=\
 	$U/_grind\
 	$U/_wc\
 	$U/_zombie\
-
+    $U/_sleep\
+    $U/_pingpong\
+    $U/_primes\
+    $U/_find\
+    $U/_trace\
 
 
 
@@ -407,3 +411,5 @@ myapi.key:
 
 
 .PHONY: handin tarball tarball-pref clean grade handin-check
+gdb:
+	riscv64-unknown-elf-gdb kernel/kernel
