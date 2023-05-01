@@ -227,11 +227,11 @@ userinit(void)
 {
   struct proc *p;
 
-  p = allocproc();
+  p = allocproc();//分配一个proc结构体，存储进程的信息，如状态、页表、寄存器、名字等
   initproc = p;
   
   // allocate one user page and copy init's instructions
-  // and data into it.
+  // and data into it.//调用uvminit函数，为进程分配一个用户页，并把initcode中的二进制代码和数据复制到这个页中。initcode是一个汇编程序（user/initcode.S:3）
   uvminit(p->pagetable, initcode, sizeof(initcode));
   p->sz = PGSIZE;
 
