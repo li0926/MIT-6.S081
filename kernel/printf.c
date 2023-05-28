@@ -114,6 +114,8 @@ printf(char *fmt, ...)
     release(&pr.lock);
 }
 
+void backtrace(void);
+
 void
 panic(char *s)
 {
@@ -136,9 +138,7 @@ printfinit(void)
 
 
 void
-backtrace(void)
-{
-  printf("backtrace:\n");
+backtrace(void){
   uint64 fp = r_fp();
   uint64 base = PGROUNDUP(fp);
   while(fp < base) {

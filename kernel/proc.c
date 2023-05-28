@@ -141,6 +141,16 @@ found:
   p->context.ra = (uint64)forkret;
   p->context.sp = p->kstack + PGSIZE;
 
+
+  if((p->userframe = (struct trapframe *)kalloc()) == 0){
+    release(&p->lock);
+    return 0;
+  }
+  p->alarm=0;
+  p->duration=0;
+  p->handler=0;
+  p->in_handler = 0;
+
   return p;
 }
 
