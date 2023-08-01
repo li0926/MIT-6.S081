@@ -281,6 +281,32 @@ freewalk(pagetable_t pagetable)
   kfree((void*)pagetable);
 }
 
+void vmprint(pagetable_t pagetable, int count) {
+  if(count==-1){
+    printf("page table %p\n",pagetable);
+  }
+  // there are 2^9 = 512 PTEs in a page table.
+  count++;
+  if(count!=3){
+    for (int i = 0; i < 512; i++) {
+      pte_t pte = pagetable[i];
+      if (pte & PTE_V) {
+        // this PTE points to a lower-level page table.
+        uint64 child = PTE2PA(pte);
+        if (count == 0) {
+            printf("..");
+        } else if (count == 1) {
+            printf(".. ..");
+        } else if (count == 2) {
+            printf(".. .. ..");
+        }
+        printf("%d: pte %p pa %p\n", i, pte, child);
+        vmprint((pagetable_t)child, count);
+      }
+    }
+  }
+}
+
 // Free user memory pages,
 // then free page-table pages.
 void

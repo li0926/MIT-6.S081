@@ -175,6 +175,10 @@ freeproc(struct proc *p)
   p->killed = 0;
   p->xstate = 0;
   p->state = UNUSED;
+
+  if(p->usyspage)
+    kfree((void*)p->usyspage);
+  p->usyspage = 0;
 }
 
 // Create a user page table for a given process,
@@ -216,7 +220,10 @@ proc_pagetable(struct proc *p)
     return 0;
   }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4cc8724e9178bfd883353f172bb6080017524a81
   return pagetable;
 }
 

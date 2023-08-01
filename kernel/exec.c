@@ -10,7 +10,7 @@
 static int loadseg(pde_t *pgdir, uint64 addr, struct inode *ip, uint offset, uint sz);
 
 int
-exec(char *path, char **argv)
+exec(char *path, char **argv)// 两个参数分别为要运行的程序的路径、程序的命令行参数
 {
   char *s, *last;
   int i, off;
@@ -115,6 +115,7 @@ exec(char *path, char **argv)
   p->trapframe->epc = elf.entry;  // initial program counter = main
   p->trapframe->sp = sp; // initial stack pointer
   proc_freepagetable(oldpagetable, oldsz);
+  if(p->pid == 1) vmprint(p->pagetable,-1);
 
 
   return argc; // this ends up in a0, the first argument to main(argc, argv)

@@ -105,7 +105,7 @@ ifeq ($(LAB),net)
 CFLAGS += -DNET_TESTS_PORT=$(SERVERPORT)
 endif
 
-ifdef KCSAN
+ifdef KCSAN # KCSAN 工具，该工具用于检测数据竞争
 CFLAGS += -DKCSAN
 KCSANFLAG = -fsanitize=thread
 endif
@@ -123,7 +123,9 @@ LDFLAGS = -z max-page-size=4096
 $K/kernel: $(OBJS) $(OBJS_KCSAN) $K/kernel.ld $U/initcode
 	$(LD) $(LDFLAGS) -T $K/kernel.ld -o $K/kernel $(OBJS) $(OBJS_KCSAN)
 	$(OBJDUMP) -S $K/kernel > $K/kernel.asm
-	$(OBJDUMP) -t $K/kernel | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $K/kernel.sym
+	$(OBJDUMP) -t $K/kernel | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $K/kernel.sym 
+# .asm 是可执行文件的反汇编
+# .sym 是可执行文件的符号表,
 
 $(OBJS): EXTRAFLAG := $(KCSANFLAG)
 
@@ -151,9 +153,10 @@ _%: %.o $(ULIB)
 	$(OBJDUMP) -S $@ > $*.asm
 	$(OBJDUMP) -t $@ | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $*.sym
 
+# 使用 perl 命令执行 $U/usys.pl 脚本，将脚本输出的内容保存到 $U/usys.S 文件中 
 $U/usys.S : $U/usys.pl
 	perl $U/usys.pl > $U/usys.S
-
+# 使用 $(CC) 编译器编译 $U/usys.S 汇编文件，并将编译生成的目标文件保存到 $U/usys.o 文件中
 $U/usys.o : $U/usys.S
 	$(CC) $(CFLAGS) -c -o $U/usys.o $U/usys.S
 
